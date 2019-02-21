@@ -20,6 +20,28 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 
+% MIT License
+% 
+% Copyright (c) 2018 Frédéric Vogel, info [at] fredericvogel.ch
+% 
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+% 
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
+% 
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% SOFTWARE.
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cv}[2018/12/08 CV]
 
@@ -27,6 +49,7 @@
 \DeclareOption{headernotbold}{\def\cv@headernotbold}
 \DeclareOption{placenotemph}{\def\cv@placenotemph}
 \DeclareOption{detailsmall}{\def\cv@detailsmall}
+\DeclareOption{debug}{\def\cv@debug}
 
 \newcommand{\cv@hlcolor}{MidnightBlue}
 \DeclareOption*{\let\cv@hlcolor\CurrentOption}
@@ -66,6 +89,7 @@
 
 % Packages needed
 \RequirePackage{etoolbox}
+\RequirePackage{enumitem}
 \RequirePackage{suffix}
 \RequirePackage{fontspec}
 \RequirePackage{titlesec}
@@ -75,7 +99,7 @@
 \RequirePackage{wrapfig}
 \RequirePackage{fancyhdr}
 \RequirePackage{lastpage}
-\RequirePackage{geometry}
+\RequirePackage[\ifdef{\cv@debug}{showframe}{}]{geometry}
 \RequirePackage{tabularx}
 \RequirePackage[bottom]{footmisc}
 
@@ -99,12 +123,19 @@
 
 \defaultfontfeatures{Mapping=tex-text}
 \setmainfont[BoldFont={Lato Regular}]{Lato Light}
-\newfontfamily\titlefont[]{Catamaran Light}
+%\newfontfamily\titlefont[]{Catamaran Light}
+\newfontfamily\titlefont[]{Lato Regular}
 
 
 % Accent elements
 
-\newcommand{\sectionrule}{{\color{\cv@hlcolor}\rule[-5pt]{\textwidth}{\cv@hlheight}}} % Accent line
+\newcommand{\HRule}[1][\linewidth]{\par
+	\vspace*{\dimexpr-\parskip-\baselineskip+10pt}
+	\noindent\rule{#1}{\cv@hlheight}\par
+	\vspace*{\dimexpr-\parskip-.5\baselineskip+10pt}}
+
+\newcommand{\sectionrule}{{\color{\cv@hlcolor}\HRule}} % Accent line
+
 
 \renewcommand{\thefootnote}{{\color{\cv@hlcolor}\arabic{footnote}}} % Footnote number color
 \renewcommand{\footnoterule}{ % Footnote line color
@@ -114,10 +145,17 @@
 }
 
 
+\newcommand{\cv@arraystretch}{1.5}
+
+
 % Section formating
 
-\titleformat{\section}{\color{\cv@hlcolor}\Large\raggedright}{}{0em}{}[]
-\titlespacing{\section}{0pt}{1.25ex}{0.5ex}
+\titleformat{\section}{\color{\cv@hlcolor}\Large\raggedright\bfseries}{}{0em}{}[]
+\titlespacing{\section}{0pt}{0.5ex}{0.5ex}
+
+% Section formating
+
+\titleformat{\subsection}{\raggedright\bfseries}{}{0em}{}[]
 
 
 % Footer
@@ -159,9 +197,9 @@
 		
 	{\titlefont\color{\cv@hlcolor}
 		
-		{\Huge \textbf{\cv@name}}\\
+		{\Huge \textbf{\cv@name}}
 		\ifdef{\cv@academic}{
-			{\large \cv@academic}
+			{\\ \large \cv@academic}
 		}{}
 		\bigskip
 	}
@@ -188,7 +226,7 @@
 % the second one variable, the third right aligned
 
 \newenvironment{cvlist}{
-	\noindent\tabularx{\textwidth}{@{}L{\cv@datewidth} >{\raggedright\arraybackslash}X r} %@{} needed for left align
+	\noindent\tabularx{\textwidth}{@{}L{\cv@datewidth} >{\raggedright\arraybackslash} X r} %@{} needed for left align
 }{
 	\endtabularx
 }
@@ -204,7 +242,7 @@
 % An environment for two columns, the first one with the specified width
 
 \newenvironment{cvtwocolumn}{
-	\noindent\tabularx{\textwidth}{@{}L{\cv@datewidth} l}
+	\noindent\tabularx{\textwidth}{@{}L{\cv@datewidth} X}
 }{
 	\endtabularx
 }
