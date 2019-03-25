@@ -1,0 +1,48 @@
+\documentclass[]{coverletter}
+
+% Colors found here: https://en.wikibooks.org/wiki/LaTeX/Colors#Predefined%20colors
+
+
+\setname{John Doe}
+\setfooter{john.doe@johndoe.com}
+
+\setplace{New York}
+\setdate{30}{4}{2020}
+
+\setsignature{name_komplett}
+
+\settitle{Application for a positiona as waiter}
+\setsubtitle{Au Petit Français}
+
+\usepackage{blindtext}
+
+
+\begin{document}
+	\begin{sender}
+		John Doe | 1 Broadway | NY 10004 New York City\\
+		+1-541-754-3010 | john.doe@johndoe.com
+	\end{sender}
+
+	\begin{addressee}
+		Au Petit Français\\
+		Mr Pierre Français
+		2 Broadway\\
+		NY 10004 New York City\\
+	\end{addressee}
+
+	\printdate
+	
+	\printtitle
+	
+	Dear Mr Français
+	
+	\Blindtext[4]
+	
+	\printsignature
+	
+	\printattachments{CV;Certificate of French Language}
+	
+
+	
+\end{document}
+
