@@ -87,6 +87,14 @@
 \newcommand{\cv@hlheight}{1.4pt}
 \newcommand{\sethlheight}[1]{\renewcommand{\cv@hlheight}{#1}}
 
+% First page number of document?
+\newcommand{\cv@firstpage}{1}
+\newcommand{\setfirstpage}[1]{\renewcommand{\cv@firstpage}{\detokenize{#1}}}
+
+% Number of total pages?
+\newcommand{\cv@numberpages}{\pageref{LastPage}}
+\newcommand{\settotalpages}[1]{\renewcommand{\cv@numberpages}{\detokenize{#1}}}
+
 
 % Geometry
 
@@ -139,9 +147,9 @@
 	\fancyhf{}
 	% If the option german was given, print page in German
 	\ifdef{\cv@german}{
-		\rfoot{Seite \thepage~von \pageref{LastPage}}
+		\rfoot{Seite \thepage~von \cv@numberpages}
 	}{
-		\rfoot{Page \thepage~of \pageref{LastPage}}
+		\rfoot{Page \thepage~of \cv@numberpages}
 	}
 	% If a footnote text was given, print that and the name, otherwise only the name
 	\ifdef{\cv@footertext}{
@@ -150,6 +158,8 @@
 	}{
 		\lfoot{\cv@name}
 	}
+
+	\setcounter{page}{\cv@firstpage}
 }
 
 % Changing the line on top of footnotes to the accent color
@@ -157,10 +167,7 @@
 \renewcommand{\footrulewidth}{\cv@hlheight}
 \renewcommand{\footrule}{\hbox to\headwidth{%
 		\color{\cv@hlcolor}\leaders\hrule height \footrulewidth\hfill}}
-	
 
-\AfterEndPreamble{
-}
 
 \newcommand{\@minipagerestore}{\setlength{\parskip}{\medskipamount}}
 
@@ -216,6 +223,5 @@
 	\begin{itemize}[noitemsep]
 		 \ProcessList{#1}{\insertitem}
 	\end{itemize}
-	
 }
 
