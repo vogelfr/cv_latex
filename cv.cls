@@ -20,28 +20,6 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 
-% MIT License
-% 
-% Copyright (c) 2018 Frédéric Vogel, info [at] fredericvogel.ch
-% 
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-% of this software and associated documentation files (the "Software"), to deal
-% in the Software without restriction, including without limitation the rights
-% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-% copies of the Software, and to permit persons to whom the Software is
-% furnished to do so, subject to the following conditions:
-% 
-% The above copyright notice and this permission notice shall be included in all
-% copies or substantial portions of the Software.
-% 
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-% SOFTWARE.
-
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cv}[2018/12/08 CV]
 
@@ -50,6 +28,7 @@
 \DeclareOption{placenotemph}{\def\cv@placenotemph}
 \DeclareOption{detailsmall}{\def\cv@detailsmall}
 \DeclareOption{debug}{\def\cv@debug}
+\DeclareOption{short}{\def\cv@short}
 
 \newcommand{\cv@hlcolor}{MidnightBlue}
 \DeclareOption*{\let\cv@hlcolor\CurrentOption}
@@ -76,9 +55,17 @@
 \setlength{\cv@datewidth}{3.9cm}
 \newcommand{\setdatewidth}[1]{\setlength{\cv@datewidth}{#1}}
 
-% How wide should the section line be?
+% How thick should the section line be?
 \newcommand{\cv@hlheight}{1.4pt}
 \newcommand{\sethlheight}[1]{\renewcommand{\cv@hlheight}{#1}}
+
+% First page number of document?
+\newcommand{\cv@firstpage}{1}
+\newcommand{\setfirstpage}[1]{\renewcommand{\cv@firstpage}{\detokenize{#1}}}
+
+% Number of total pages?
+\newcommand{\cv@numberpages}{\pageref{LastPage}}
+\newcommand{\settotalpages}[1]{\renewcommand{\cv@numberpages}{\detokenize{#1}}}
 
 \ProcessOptions\relax
 
@@ -106,10 +93,10 @@
 % Geometry
 
 \geometry{
-	top=15mm,
+	top=20mm,
 	bottom=20mm,
-	left=15mm,
-	right=15mm
+	left=20mm,
+	right=20mm
 }
 
 
@@ -150,13 +137,15 @@
 
 % Section formating
 
-\titleformat{\section}{\color{\cv@hlcolor}\Large\raggedright\bfseries}{}{0em}{}[]
-\titlespacing{\section}{0pt}{0.5ex}{0.5ex}
-
-% Section formating
-
-\titleformat{\subsection}{\raggedright\bfseries}{}{0em}{}[]
-
+\ifdef{\cv@short}{
+	\titleformat{\section}{\color{\cv@hlcolor}\large\raggedright\bfseries}{}{0em}{}[]
+	\titlespacing{\section}{0pt}{0.5ex}{0.5ex}
+	\titleformat{\subsection}{\raggedright\bfseries}{}{0em}{}[]
+}{
+	\titleformat{\section}{\color{\cv@hlcolor}\Large\raggedright\bfseries}{}{0em}{}[]
+	\titlespacing{\section}{0pt}{0.5ex}{0.5ex}
+	\titleformat{\subsection}{\raggedright\bfseries}{}{0em}{}[]
+}
 
 % Footer
 
@@ -165,9 +154,9 @@
 	\fancyhf{}
 	% If the option german was given, print page in German
 	\ifdef{\cv@german}{
-		\rfoot{Seite \thepage~von \pageref{LastPage}}
+		\rfoot{Seite \thepage~von \cv@numberpages}
 	}{
-		\rfoot{Page \thepage~of \pageref{LastPage}}
+		\rfoot{Page \thepage~of \cv@numberpages}
 	}
 	% If a footnote text was given, print that and the name, otherwise only the name
 	\ifdef{\cv@footertext}{
@@ -176,6 +165,8 @@
 	}{
 		\lfoot{\cv@name}
 	}
+
+	\setcounter{page}{\cv@firstpage}
 }
 
 % Changing the line on top of footnotes to the accent color
@@ -196,8 +187,11 @@
 	}{}
 		
 	{\titlefont\color{\cv@hlcolor}
-		
-		{\Huge \textbf{\cv@name}}
+		\ifdef{\cv@short}{
+			{\huge \textbf{\cv@name}}
+		}{
+			{\Huge \textbf{\cv@name}}
+		}
 		\ifdef{\cv@academic}{
 			{\\ \large \cv@academic}
 		}{}
